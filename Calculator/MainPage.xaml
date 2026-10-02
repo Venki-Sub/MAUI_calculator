@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Calculator.MainPage"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#1A1B2E" Offset="0.0"/>
+            <GradientStop Color="#0B0C14" Offset="1.0"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ContentPage.Resources>
+        <!-- Base style shared by every key -->
+        <Style x:Key="KeyBase" TargetType="Button">
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="CornerRadius" Value="22"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="BorderWidth" Value="0"/>
+            <Setter Property="Shadow">
+                <Shadow Brush="Black" Offset="0,6" Radius="12" Opacity="0.45"/>
+            </Setter>
+            <!-- Small "press" animation -->
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="1"/>
+                                <Setter Property="Opacity" Value="1"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="0.92"/>
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+        <!-- Number keys -->
+        <Style x:Key="DigitKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+            <Setter Property="BackgroundColor" Value="#262838"/>
+        </Style>
+
+        <!-- Operator keys (+ - × ÷) -->
+        <Style x:Key="OpKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#7F5AF0" Offset="0"/>
+                    <GradientStop Color="#5A3FD1" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+
+        <!-- Equal key -->
+        <Style x:Key="EqualKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#2CB67D" Offset="0"/>
+                    <GradientStop Color="#1E8F62" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+
+        <!-- Clear key -->
+        <Style x:Key="ClearKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#FF5470" Offset="0"/>
+                    <GradientStop Color="#D63A55" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid Padding="20" RowSpacing="12" MaximumWidthRequest="520">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Display screen -->
+        <Border Grid.Row="0" Padding="22,18" StrokeThickness="1" Stroke="#33FFFFFF">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="26"/>
+            </Border.StrokeShape>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#22243A" Offset="0"/>
+                    <GradientStop Color="#151625" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Shadow>
+                <Shadow Brush="#7F5AF0" Offset="0,0" Radius="30" Opacity="0.35"/>
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="4">
+                <!-- Label showing the current operation (e.g. "5 + 3 =") -->
+                <Label x:Name="LBL_Op" Text=" " FontSize="20" TextColor="#9A9CC4"
+                       HorizontalTextAlignment="End"/>
+
+                <!-- Result of the calculation -->
+                <Label x:Name="TB_Display" Text="0" FontSize="64" FontAttributes="Bold"
+                       TextColor="White" HorizontalTextAlignment="End"
+                       LineBreakMode="HeadTruncation" MaxLines="1"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Keypad -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*">
+            <Button Grid.Row="0" Grid.Column="0" x:Name="BTN_7" Text="7" Style="{StaticResource DigitKey}" Clicked="BTN_7_Click"/>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="BTN_8" Text="8" Style="{StaticResource DigitKey}" Clicked="BTN_8_Click"/>
+            <Button Grid.Row="0" Grid.Column="2" x:Name="BTN_9" Text="9" Style="{StaticResource DigitKey}" Clicked="BTN_9_Click"/>
+            <Button Grid.Row="0" Grid.Column="3" x:Name="BTN_Divide" Text="÷" Style="{StaticResource OpKey}" Clicked="BTN_Divide_Click"/>
+
+            <Button Grid.Row="1" Grid.Column="0" x:Name="BTN_4" Text="4" Style="{StaticResource DigitKey}" Clicked="BTN_4_Click"/>
+            <Button Grid.Row="1" Grid.Column="1" x:Name="BTN_5" Text="5" Style="{StaticResource DigitKey}" Clicked="BTN_5_Click"/>
+            <Button Grid.Row="1" Grid.Column="2" x:Name="BTN_6" Text="6" Style="{StaticResource DigitKey}" Clicked="BTN_6_Click"/>
+            <Button Grid.Row="1" Grid.Column="3" x:Name="BTN_Mul" Text="×" Style="{StaticResource OpKey}" Clicked="BTN_Mul_Click"/>
+
+            <Button Grid.Row="2" Grid.Column="0" x:Name="BTN_1" Text="1" Style="{StaticResource DigitKey}" Clicked="BTN_1_Click"/>
+            <Button Grid.Row="2" Grid.Column="1" x:Name="BTN_2" Text="2" Style="{StaticResource DigitKey}" Clicked="BTN_2_Click"/>
+            <Button Grid.Row="2" Grid.Column="2" x:Name="BTN_3" Text="3" Style="{StaticResource DigitKey}" Clicked="BTN_3_Click"/>
+            <Button Grid.Row="2" Grid.Column="3" x:Name="BTN_minus" Text="−" Style="{StaticResource OpKey}" Clicked="BTN_minus_Click"/>
+
+            <Button Grid.Row="3" Grid.Column="0" x:Name="BTN_Clear" Text="AC" Style="{StaticResource ClearKey}" Clicked="BTN_Clear_Click"/>
+            <Button Grid.Row="3" Grid.Column="1" x:Name="BTN_0" Text="0" Style="{StaticResource DigitKey}" Clicked="BTN_0_Click"/>
+            <Button Grid.Row="3" Grid.Column="2" x:Name="BTN_Equal" Text="=" Style="{StaticResource EqualKey}" Clicked="BTN_Equal_Click"/>
+            <Button Grid.Row="3" Grid.Column="3" x:Name="BTN_Plus" Text="+" Style="{StaticResource OpKey}" Clicked="BTN_Plus_Click"/>
+        </Grid>
+    </Grid>
+</ContentPage>
